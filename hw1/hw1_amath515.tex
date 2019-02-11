@@ -15,6 +15,9 @@
 % Basic Document Settings
 %
 
+\usepackage{graphicx, url}
+\graphicspath{figures/}
+
 \topmargin=-0.45in
 \evensidemargin=0in
 \oddsidemargin=0in
@@ -26,8 +29,8 @@
 
 \pagestyle{fancy}
 \lhead{\hmwkAuthorName}
-\chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle}
-\rhead{\firstxmark}
+\chead{\hmwkClass}
+\rhead{\hmwkTitle}
 \lfoot{\lastxmark}
 \cfoot{\thepage}
 
@@ -86,12 +89,12 @@
 %   - Author
 %
 
-\newcommand{\hmwkTitle}{Homework\ \#2}
-\newcommand{\hmwkDueDate}{February 12, 2014}
-\newcommand{\hmwkClass}{Calculus}
+\newcommand{\hmwkTitle}{Homework\ \#1}
+\newcommand{\hmwkDueDate}{January 23, 2019}
+\newcommand{\hmwkClass}{AMATH 515 (Optimization)}
 \newcommand{\hmwkClassTime}{Section A}
-\newcommand{\hmwkClassInstructor}{Professor Isaac Newton}
-\newcommand{\hmwkAuthorName}{\textbf{Josh Davis} \and \textbf{Davis Josh}}
+\newcommand{\hmwkClassInstructor}{Prof. Alexander Aravkin}
+\newcommand{\hmwkAuthorName}{\textbf{Alexey Sholokhov}}
 
 %
 % Title Page
@@ -100,7 +103,7 @@
 \title{
     \vspace{2in}
     \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
-    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 3:10pm}\\
+    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 23:59}\\
     \vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
     \vspace{3in}
 }
@@ -130,10 +133,27 @@
 \newcommand{\solution}{\textbf{\large Solution}}
 
 % Probability commands: Expectation, Variance, Covariance, Bias
-\newcommand{\E}{\mathrm{E}}
 \newcommand{\Var}{\mathrm{Var}}
 \newcommand{\Cov}{\mathrm{Cov}}
 \newcommand{\Bias}{\mathrm{Bias}}
+\DeclareMathOperator{\dom}{Dom}
+\DeclareMathOperator{\diag}{Diag}
+
+%% \mathbb symbols
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\A}{\mathbb{A}}
+\DeclareMathOperator{\R}{\mathbb{R}}
+\DeclareMathOperator{\X}{\mathbb{X}}
+\DeclareMathOperator{\N}{\mathbb{N}}
+\DeclareMathOperator{\Q}{\mathbb{Q}}
+
+%% \mathcal symbols
+\DeclareMathOperator{\RR}{\mathcal{R}}
+\DeclareMathOperator{\PP}{\mathcal{P}}
+\DeclareMathOperator{\NN}{\mathcal{N}}
+\DeclareMathOperator{\CC}{\mathcal{C}}
+
+%% Q.E.D. 
 
 \begin{document}
 
@@ -141,399 +161,159 @@
 
 \pagebreak
 
-\begin{homeworkProblem}
-    Give an appropriate positive constant \(c\) such that \(f(n) \leq c \cdot
-    g(n)\) for all \(n > 1\).
+    \textbf{Notation}: For this assignment let $x_1, x_2 \in \dom(f)$, and let $x = \lambda x_1 + (1 - \lambda) x_2$ for some $\lambda \in [0, 1]$, where $f$ is a function from the problem we work on. 
 
+\begin{homeworkProblem}
+    Explain why each of the following functions is convex:
     \begin{enumerate}
-        \item \(f(n) = n^2 + n + 1\), \(g(n) = 2n^3\)
-        \item \(f(n) = n\sqrt{n} + n^2\), \(g(n) = n^2\)
-        \item \(f(n) = n^2 - n + 1\), \(g(n) = n^2 / 2\)
+        \item[a)] \( \delta_C (x) = \begin{cases} 
+            0, &  x \in C \\
+            \infty,  & x \not \in C  
+        \end{cases} \), $\quad C$ is convex
+        \item[b)] \(\sigma_C (x) = \sup_{c \in C} c^Tx \)
+        \item[c)] \(f(x, t) = tg(x/t)\) where $g$ is a convex function, $x \in \R^n$
     \end{enumerate}
-
+    
     \textbf{Solution}
-
-    We solve each solution algebraically to determine a possible constant
-    \(c\).
-    \\
-
-    \textbf{Part One}
-
-    \[
-        \begin{split}
-            n^2 + n + 1 &=
-            \\
-            &\leq n^2 + n^2 + n^2
-            \\
-            &= 3n^2
-            \\
-            &\leq c \cdot 2n^3
-        \end{split}
-    \]
-
-    Thus a valid \(c\) could be when \(c = 2\).
-    \\
-
-    \textbf{Part Two}
-
-    \[
-        \begin{split}
-            n^2 + n\sqrt{n} &=
-            \\
-            &= n^2 + n^{3/2}
-            \\
-            &\leq n^2 + n^{4/2}
-            \\
-            &= n^2 + n^2
-            \\
-            &= 2n^2
-            \\
-            &\leq c \cdot n^2
-        \end{split}
-    \]
-
-    Thus a valid \(c\) is \(c = 2\).
-    \\
-
-    \textbf{Part Three}
-
-    \[
-        \begin{split}
-            n^2 - n + 1 &=
-            \\
-            &\leq n^2
-            \\
-            &\leq c \cdot n^2/2
-        \end{split}
-    \]
-
-    Thus a valid \(c\) is \(c = 2\).
+        
+    \begin{itemize}
+        \item[a)] Let $x_1, x_2 \in C$, so $x \in C$, as $C$ is convex. Then $\delta_C(x) = 0 \leq 0 = \lambda \delta_C(x_1) + (1 - \lambda)\delta_C(x_2)$. 
+        If either $x_1 \not \in C$ or $x_2 \not \in C$ then $\lambda \delta_C (x_1) + (1 - \lambda)\delta_C(x_2) = \infty \geq \delta_C(x)$ whatever $x$ is by the definition of infinity. 
+        \item[b)] \(\sigma_C(x) = \sigma_C(\lambda x_1 + (1 - \lambda) x_2) = \sup_{c \in C}c^T(\lambda x_1 + (1 - \lambda) x_2) \leq \lambda\sup_{c \in C} c^Tx_1 + (1 - \lambda)\sup_{c \in C} c^Tx_2 = \lambda \sigma_C(x_1) + (1 - \lambda)\sigma_C(x_2)\) 
+        \item[c)] For any $(x_1, t_1), (x_2, t_2) \in \R\times\R_+$ \\ \(f(x, t) = (\lambda t_1 + (1-\lambda)t_2)g\left( \frac{\lambda x_1 + (1-\lambda)x_2}{\lambda t_1 + (1 - \lambda) t_2}\right) = (\lambda t_1 + (1-\lambda)t_2)g\left(\frac{(1 - \lambda)t_1}{(1-\lambda)t_1+\lambda t_2}\frac{x_1}{t_1} + \frac{\lambda t_2}{(1-\lambda)t_1+\lambda t_2}\frac{x_2}{t_2} \right) \leq (1-\lambda) t_1 g\left(\frac{x_1}{t_1}\right) + \ t_1 g\left(\frac{x_1}{t_1}\right)\)
+    \end{itemize}    
 
 \end{homeworkProblem}
 
-\pagebreak
 
 \begin{homeworkProblem}
-    Let \(\Sigma = \{0, 1\}\). Construct a DFA \(A\) that recognizes the
-    language that consists of all binary numbers that can be divided by 5.
+Let $f, g \in \CC^2(\R),\, h = f(g(x))$
+\begin{enumerate}
+    \item[a)] Let $f$ and $g$ be convex. Is $h$ convex?
+    \item[b)] Let $f$ be convex and $g$ be concave. Is $h$ convex? 
+    \item[c)] Let $f$ be convex and $g$ be affine. Prove that $h$ is convex.
+    \item[d)] Show that the following functions are convex: 
+        \begin{enumerate}
+            \item[i)] Logistic regression objective: \(\sum_{i = 1}^n \log(1 + e^{a_i^Tx}) - b^TAx\)
+            \item[ii)] Poisson regression objective: \(\sum_{i = 1}^n e^{a^T_ix} - b^TAx\)
+        \end{enumerate}    
+\end{enumerate}
+
+\textbf{Solution}
+\begin{enumerate}
+    \item[a)] $h$ is not convex. \textbf{A counter example}: \(f(x) = x^{-1} \text{ -- convex}, \, g(x) = -x \text{ -- convex} \implies h(x) = -x^{-1}\) which is concave.
+        Recalling the convexity criterion from calculus to provide a sufficient condition: 
+        \begin{equation}
+        \label{eq:convexity_criterion}
+            f(x) \text{ is convex in} \R \quad \iff \quad \forall x \in \R \, f''(x) \geq 0             
+        \end{equation}
+        \[h'(x) = f'\left(g(x)\right)g'(x)\]
+        \[h''(x) = \underbrace{f''(g(x))}_{\geq 0 \text{ as f is convex}}\underbrace{\left(g'(x)\right)^2}_{\geq 0} + f'(x)\underbrace{g''(x)}_{\geq 0 \text{ as g is convex}}\]
+        So we need $f'(x) \geq 0$ which means that \textbf{$f$ should be non-decreasing}. \qed
+    \item[b)] $h$ is not convex. \textbf{A counter example:} \(f = x^{\frac{3}{2}} \text{ is convex},\, g = \sqrt{x} \text{ is concave, but } h = x^{\frac{3}{4}}\) is concave. 
+    We use the same criterion: 
+    \[h''(x) = \underbrace{f''(g(x))}_{\geq 0 \text{ as f -- convex}}\underbrace{\left(g'(x)\right)^2}_{\geq 0} + f'(x)\underbrace{g''(x)}_{\leq 0 \text{ as g -- concave}}\]
+    So we need $f'(x) \leq 0$ which means that \textbf{$f$ should be non-increasing}. \qed
+    \item[c)] Let $g(x) = Ax + b$ be affine. So \(h(x) = f(g(x)) = f(Ax + b) = f(\lambda Ax_1 + (1 - \lambda)Ax_2 + \lambda b + (1 - \lambda)b) \leq \)
     \\
+    \(\leq \lambda f(Ax_1 + b) + (1 - \lambda)f(Ax_2 + b) = \lambda h(x_1) + (1-\lambda)h(x_2)\) \qed
+    \item[d)]
+    \begin{enumerate}
+        \item[i)] First, note that \(g(x) = \log(1 + e^x)\) is convex due to the convexity criterion $\frac{\partial^2}{\partial x^2}g(x) = \frac{e^x}{(1 + e^-x)^2} \geq 0$. $h(x) = a_i^Tx$ is affine. Hence, $f(x) = g(h(x)) = \log(1 + e^{a_i^Tx})$ is convex due to (c). 
+        
+            Next, $-b^TAx$ is a linear function of $x$, so it is convex. And, finally, a sum over $n+1$ convex functions is convex. \qed
+        \item[ii)] $e^x$ is a convex function, as $\frac{d^2}{dx^2}e^x = e^x \geq 0$. $h(x) = a_i^Tx$ is affine. Hence $e^{a_i^Tx}$ is convex due to (c). Finally, the sum of $n$ convex functions and one linear function is convex. \qed 
+    \end{enumerate} 
+\end{enumerate}
+ 
 
-    Let the state \(q_k\) indicate the remainder of \(k\) divided by 5. For
-    example, the remainder of 2 would correlate to state \(q_2\) because \(7
-    \mod 5 = 2\).
-
-    \begin{figure}[h]
-        \centering
-        \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
-            \node[state, accepting, initial] (q_0)   {$q_0$};
-            \node[state] (q_1) [right=of q_0] {$q_1$};
-            \node[state] (q_2) [right=of q_1] {$q_2$};
-            \node[state] (q_3) [right=of q_2] {$q_3$};
-            \node[state] (q_4) [right=of q_3] {$q_4$};
-            \path[->]
-                (q_0)
-                    edge [loop above] node {0} (q_0)
-                    edge node {1} (q_1)
-                (q_1)
-                    edge node {0} (q_2)
-                    edge [bend right=-30] node {1} (q_3)
-                (q_2)
-                    edge [bend left] node {1} (q_0)
-                    edge [bend right=-30] node {0} (q_4)
-                (q_3)
-                    edge node {1} (q_2)
-                    edge [bend left] node {0} (q_1)
-                (q_4)
-                    edge node {0} (q_3)
-                    edge [loop below] node {1} (q_4);
-        \end{tikzpicture}
-        \caption{DFA, \(A\), this is really beautiful, ya know?}
-        \label{fig:multiple5}
-    \end{figure}
-
-    \textbf{Justification}
-    \\
-
-    Take a given binary number, \(x\). Since there are only two inputs to our
-    state machine, \(x\) can either become \(x0\) or \(x1\). When a 0 comes
-    into the state machine, it is the same as taking the binary number and
-    multiplying it by two. When a 1 comes into the machine, it is the same as
-    multipying by two and adding one.
-    \\
-
-    Using this knowledge, we can construct a transition table that tell us
-    where to go:
-
-    \begin{table}[ht]
-        \centering
-        \begin{tabular}{c || c | c | c | c | c}
-            & \(x \mod 5 = 0\)
-            & \(x \mod 5 = 1\)
-            & \(x \mod 5 = 2\)
-            & \(x \mod 5 = 3\)
-            & \(x \mod 5 = 4\)
-            \\
-            \hline
-            \(x0\) & 0 & 2 & 4 & 1 & 3 \\
-            \(x1\) & 1 & 3 & 0 & 2 & 4 \\
-        \end{tabular}
-    \end{table}
-
-    Therefore on state \(q_0\) or (\(x \mod 5 = 0\)), a transition line should
-    go to state \(q_0\) for the input 0 and a line should go to state \(q_1\)
-    for input 1. Continuing this gives us the Figure~\ref{fig:multiple5}.
 \end{homeworkProblem}
 
 \begin{homeworkProblem}
-    Write part of \alg{Quick-Sort($list, start, end$)}
+A function is strictly convex if 
+\[
+    f(\lambda x_1 + (1 - \lambda)x_2) < \lambda f(x_1) + (1 - \lambda)f(x_2)
+\]
+$\lambda \in (0,1)$.
+\begin{enumerate}
+    \item[a)] Give an example of a strictly convex function which does not have a minimizer.
+    \item[b)] Show that a sum of a strictly convex function and a convex function is strictly convex.
+    \item[c)] What conditions (if any) are necessary to ensure that the following problems have a unique minimizer?
+    \begin{enumerate}
+        \item[i)] \(\min_x \frac{1}{2}\|Ax - b\|^2\)
+        \item[ii)] \(\min_x \sum_{i = 1}^n \log(1 + e^{a_i^Tx}) - b^TAx\)
+        \item[iii)] \(\min_x \sum_{i = 1}^n \log(1 + e^{a_i^Tx}) - b^TAx + \lambda(\alpha\|x\|_1 + (1 - \alpha)\|x\|^2), \quad \lambda > 0, \, \alpha > 0\)
+    \end{enumerate}
+\end{enumerate}
 
-    \begin{algorithm}[]
-        \begin{algorithmic}[1]
-            \Function{Quick-Sort}{$list, start, end$}
-                \If{$start \geq end$}
-                    \State{} \Return{}
-                \EndIf{}
-                \State{} $mid \gets \Call{Partition}{list, start, end}$
-                \State{} \Call{Quick-Sort}{$list, start, mid - 1$}
-                \State{} \Call{Quick-Sort}{$list, mid + 1, end$}
-            \EndFunction{}
-        \end{algorithmic}
-        \caption{Start of QuickSort}
-    \end{algorithm}
+\textbf{Solution}
+The strict convexity criterion from the Boyd's book "Convex Optimization" will be used:
+
+\[
+    f(x) \text{ is strictly convex} \iff \|\nabla^2f(x)\| > 0 \text{ everywhere}
+\]
+
+\begin{enumerate}
+    \item[a)] An example is \(f(x) = e^x\) as \(\frac{d^2}{dx^2}e^x = e^x > 0\) everywhere, yet \(\arg \min_x e^x = - \infty\) \qed
+    \item[b)] Let $f$ be convex and $g$ be strictly convex.
+    
+    \(f(x) + g(x) = f(\lambda x_1 + (1 - \lambda)x_2) + g(\lambda x_1 + (1 - \lambda)x_2) < f(\lambda x_1 + (1 - \lambda)x_2) + \lambda g(x_1) + (1 - \lambda)g(x_2) \leq \)
+    \\
+    \(\leq \lambda(f(x_1) + g(x_1)) + (1 - \lambda)(f(x_2) + g(x_2))\) \qed
+    \item[c)] For (i) and (ii) the second order necessary conditions (Theorem 2.8 in the course book) will be used: 
+    \[
+        \text{If } x \in U \text{ is a local minimizer, then } \nabla f(x) = 0 \text{ and } \nabla^2 f(x) \succeq 0
+    \] 
+    \begin{enumerate}
+        \item[i)] \(\nabla f(x) = A^T(Ax - b) = 0 \implies A^TAx = A^Tb \) -- the normal equation should hold.
+        Also, \(\nabla^2 f(x) = A^TA \succeq 0\) for all $x$ as \(x^TA^TAx = (Ax)^TAx = \|Ax\| \geq 0\) for all $x$, so this condition always holds. \qed
+        \item[ii)] \(\nabla f(x) = A^T\sigma(Ax) - A^Tb\) where $\sigma(y) = \frac{1}{1+e^{-y}}$, and $\sigma(x) \in \R^n \text{ for } x \in \R^n$ means the vectorized form (element wise application). So we need to ensure that $\sigma(Ax) - b \in Ker(A)$. Also, note that \( \nabla^2f(x) = A^T\diag(\sigma(Ax)\sigma(-Ax))A \succeq 0\) for all $x$: let $M = \sqrt{\diag(\sigma(Ax)\sigma(-Ax))}$ (all the diagonal elements are positive for all $x$), then we have: \(y^TA^T\diag(\sigma(Ax)\sigma(-Ax))Ay = y^TA^TM^TMAy = \|MAy\| = \|Ay\|_{M^TM} \geq 0 \) for all $y \in \R^n$, so the Hessian condition always holds. \qed
+        \item[iii)] This function is strictly convex as a sum of a strictly convex function ($\frac{\lambda}{2}\|x\|^2$) and convex ones (see 3b), so the minimizer is unique, if exists. The function is non-differentiable yet continuous. Hence, due to the Weierstrass Theorem, it is enough to ensure that the domain of the function is finite and convex to guarantee the existence of a unique minimizer.\qed
+    \end{enumerate}
+\end{enumerate}
 \end{homeworkProblem}
 
-\pagebreak
-
 \begin{homeworkProblem}
-    Suppose we would like to fit a straight line through the origin, i.e.,
-    \(Y_i = \beta_1 x_i + e_i\) with \(i = 1, \ldots, n\), \(\E [e_i] = 0\),
-    and \(\Var [e_i] = \sigma^2_e\) and \(\Cov[e_i, e_j] = 0, \forall i \neq
-    j\).
-    \\
 
-    \part
+Find the global bound for $\beta$ (if any) for the following objectives: 
+\begin{enumerate}
+    \item[a)] \(\frac{1}{2}\|Ax - b\|^2\)
+    \item[b)] \(\sum_{i = 1}^n \log(1 + e^{a^T_ix}) + \frac{\lambda}{2}\|x\|^2 \)
+    \item[c)] \(\sum_{i = 1}^n e^{a^T_ix} - b^TAx\)
+\end{enumerate}
 
-    Find the least squares esimator for \(\hat{\beta_1}\) for the slope
-    \(\beta_1\).
-    \\
-
-    \solution
-
-    To find the least squares estimator, we should minimize our Residual Sum
-    of Squares, RSS:
-
-    \[
-        \begin{split}
-            RSS &= \sum_{i = 1}^{n} {(Y_i - \hat{Y_i})}^2
-            \\
-            &= \sum_{i = 1}^{n} {(Y_i - \hat{\beta_1} x_i)}^2
-        \end{split}
-    \]
-
-    By taking the partial derivative in respect to \(\hat{\beta_1}\), we get:
-
-    \[
-        \pderiv{
-            \hat{\beta_1}
-        }{RSS}
-        = -2 \sum_{i = 1}^{n} {x_i (Y_i - \hat{\beta_1} x_i)}
-        = 0
-    \]
-
-    This gives us:
-
-    \[
-        \begin{split}
-            \sum_{i = 1}^{n} {x_i (Y_i - \hat{\beta_1} x_i)}
-            &= \sum_{i = 1}^{n} {x_i Y_i} - \sum_{i = 1}^{n} \hat{\beta_1} x_i^2
-            \\
-            &= \sum_{i = 1}^{n} {x_i Y_i} - \hat{\beta_1}\sum_{i = 1}^{n} x_i^2
-        \end{split}
-    \]
-
-    Solving for \(\hat{\beta_1}\) gives the final estimator for \(\beta_1\):
-
-    \[
-        \begin{split}
-            \hat{\beta_1}
-            &= \frac{
-                \sum {x_i Y_i}
-            }{
-                \sum x_i^2
-            }
-        \end{split}
-    \]
-
-    \pagebreak
-
-    \part
-
-    Calculate the bias and the variance for the estimated slope
-    \(\hat{\beta_1}\).
-    \\
-
-    \solution
-
-    For the bias, we need to calculate the expected value
-    \(\E[\hat{\beta_1}]\):
-
-    \[
-        \begin{split}
-            \E[\hat{\beta_1}]
-            &= \E \left[ \frac{
-                \sum {x_i Y_i}
-            }{
-                \sum x_i^2
-            }\right]
-            \\
-            &= \frac{
-                \sum {x_i \E[Y_i]}
-            }{
-                \sum x_i^2
-            }
-            \\
-            &= \frac{
-                \sum {x_i (\beta_1 x_i)}
-            }{
-                \sum x_i^2
-            }
-            \\
-            &= \frac{
-                \sum {x_i^2 \beta_1}
-            }{
-                \sum x_i^2
-            }
-            \\
-            &= \beta_1 \frac{
-                \sum {x_i^2 \beta_1}
-            }{
-                \sum x_i^2
-            }
-            \\
-            &= \beta_1
-        \end{split}
-    \]
-
-    Thus since our estimator's expected value is \(\beta_1\), we can conclude
-    that the bias of our estimator is 0.
-    \\
-
-    For the variance:
-
-    \[
-        \begin{split}
-            \Var[\hat{\beta_1}]
-            &= \Var \left[ \frac{
-                \sum {x_i Y_i}
-            }{
-                \sum x_i^2
-            }\right]
-            \\
-            &=
-            \frac{
-                \sum {x_i^2}
-            }{
-                \sum x_i^2 \sum x_i^2
-            } \Var[Y_i]
-            \\
-            &=
-            \frac{
-                \sum {x_i^2}
-            }{
-                \sum x_i^2 \sum x_i^2
-            } \Var[Y_i]
-            \\
-            &=
-            \frac{
-                1
-            }{
-                \sum x_i^2
-            } \Var[Y_i]
-            \\
-            &=
-            \frac{
-                1
-            }{
-                \sum x_i^2
-            } \sigma^2
-            \\
-            &=
-            \frac{
-                \sigma^2
-            }{
-                \sum x_i^2
-            }
-        \end{split}
-    \]
-
-\end{homeworkProblem}
-
-\pagebreak
-
-\begin{homeworkProblem}
-    Prove a polynomial of degree \(k\), \(a_kn^k + a_{k - 1}n^{k - 1} + \hdots
-    + a_1n^1 + a_0n^0\) is a member of \(\Theta(n^k)\) where \(a_k \hdots a_0\)
-    are nonnegative constants.
-
-    \begin{proof}
-        To prove that \(a_kn^k + a_{k - 1}n^{k - 1} + \hdots + a_1n^1 +
-        a_0n^0\), we must show the following:
-
+\textbf{Solution}
+For (a) and (b) I'll use the Theorem 1 from the lecture notes: 
+    \[ f \in \CC_\beta^{2, 1} \iff \forall x\: \| \nabla^2f(x)\| \leq \beta \]
+    
+    \begin{enumerate}
+        \item[a)] $\|\nabla^2 f(x)\| = \|A^TA\| = \sigma_1(A^TA) = \beta$ where $\sigma_1(X)$ is the largest singular value for the matrix $X$. \qed
+        \item[b)] $\|\nabla^2 f(x)\| = \|A^T\diag(\sigma(Ax)\sigma(-Ax))A + \lambda I\|  \leq \frac{1}{4}\|A^TA\|\|\diag(\sigma(Ax)\sigma(-Ax))\| + \lambda \leq \frac{1}{4}\sigma_1(A^TA)\max(\sigma(Ax)) + \lambda$ \qed
+        \item[c)] There is no $\beta$ for this function. Let's prove it as contra positive: suppose there is $\beta$ such that for any $x$ and $y$
         \[
-            \exists c_1 \exists c_2 \forall n \geq n_0,\ {c_1 \cdot g(n) \leq
-            f(n) \leq c_2 \cdot g(n)}
+            \|\nabla f(x) - \nabla f(y)\| \leq \beta\|x - y\|
         \]
-
-        For the first inequality, it is easy to see that it holds because no
-        matter what the constants are, \(n^k \leq a_kn^k + a_{k - 1}n^{k - 1} +
-        \hdots + a_1n^1 + a_0n^0\) even if \(c_1 = 1\) and \(n_0 = 1\).  This
-        is because \(n^k \leq c_1 \cdot a_kn^k\) for any nonnegative constant,
-        \(c_1\) and \(a_k\).
-        \\
-
-        Taking the second inequality, we prove it in the following way.
-        By summation, \(\sum\limits_{i=0}^k a_i\) will give us a new constant,
-        \(A\). By taking this value of \(A\), we can then do the following:
-
+        holds. Let $y = 0$ and $x_\alpha = \alpha e_i$ such that $e^{a_i} \not \in \ker(A)$. Such $i$ always exists if $A \not = 0^{m \times n}$ So 
         \[
-            \begin{split}
-                a_kn^k + a_{k - 1}n^{k - 1} + \hdots + a_1n^1 + a_0n^0 &=
-                \\
-                &\leq (a_k + a_{k - 1} \hdots a_1 + a_0) \cdot n^k
-                \\
-                &= A \cdot n^k
-                \\
-                &\leq c_2 \cdot n^k
-            \end{split}
+            \|\sum_{j = 1}^n a_j(e^{\alpha A_{ij}} - 1) \| = \|Ae^{\alpha a_i}\| \leq \beta\alpha
         \]
-
-        where \(n_0 = 1\) and \(c_2 = A\). \(c_2\) is just a constant. Thus the
-        proof is complete.
-    \end{proof}
+        
+        Easy to see that $\lim_{\alpha \to \infty} \frac{Ae^{\alpha a_i}}{\alpha} = \infty > \beta$, which concludes the proof. \qed
+        
+    \end{enumerate}
 \end{homeworkProblem}
 
-\pagebreak
-
-%
-% Non sequential homework problems
-%
-
-% Jump to problem 18
-\begin{homeworkProblem}[18]
-    Evaluate \(\sum_{k=1}^{5} k^2\) and \(\sum_{k=1}^{5} (k - 1)^2\).
-\end{homeworkProblem}
-
-% Continue counting to 19
 \begin{homeworkProblem}
-    Find the derivative of \(f(x) = x^4 + 3x^2 - 2\)
-\end{homeworkProblem}
-
-% Go back to where we left off
-\begin{homeworkProblem}[6]
-    Evaluate the integrals
-    \(\int_0^1 (1 - x^2) \dx\)
-    and
-    \(\int_1^{\infty} \frac{1}{x^2} \dx\).
+    \begin{enumerate}
+        \item[a)]
+        \includegraphics[width=0.9\textwidth]{figures/grad_lgt}
+        \item[b)]
+        \includegraphics[width=0.9\textwidth]{figures/grad_newton_lgt}
+        
+        Both methods converge, yet the Newton method converges 20 times faster than the Gradient Descent. 
+        \item[c)] \includegraphics[width=0.9\textwidth]{figures/grad_newton_poisson}
+        \item[d)] Newton Method converges with acceleration over time, while the Gradient Descent method converges with a fixed rate in terms of a logarithmic plot. It illustrates the theoretical result that the Newton Method converges quadratically while the Gradient Descent algorithm converges linearly. Also, it means that the starting point was pretty close to the solution, as the fixed step-size Newton method converges. 
+    \end{enumerate}
 \end{homeworkProblem}
 
 \end{document}
