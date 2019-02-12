@@ -1,0 +1,331 @@
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+
+\usetikzlibrary{automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\usepackage{graphicx, url}
+\graphicspath{figures/}
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+\chead{\hmwkClass}
+\rhead{\hmwkTitle}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
+}
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Problem \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+%   - Title
+%   - Due date
+%   - Class
+%   - Section/Time
+%   - Instructor
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{Homework\ \#2}
+\newcommand{\hmwkDueDate}{February 11, 2019}
+\newcommand{\hmwkClass}{AMATH 515 (Optimization)}
+\newcommand{\hmwkClassTime}{Section A}
+\newcommand{\hmwkClassInstructor}{Prof. Alexander Aravkin}
+\newcommand{\hmwkAuthorName}{\textbf{Alexey Sholokhov}}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 23:59}\\
+    \vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
+    \vspace{3in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+%
+% Various Helper Commands
+%
+
+% Useful for algorithms
+\newcommand{\alg}[1]{\textsc{\bfseries \footnotesize #1}}
+
+% For derivatives
+\newcommand{\deriv}[1]{\frac{\mathrm{d}}{\mathrm{d}x} (#1)}
+
+% For partial derivatives
+\newcommand{\pderiv}[2]{\frac{\partial}{\partial #1} (#2)}
+
+% Integral dx
+\newcommand{\dx}{\mathrm{d}x}
+
+% Alias for the Solution section header
+\newcommand{\solution}{\textbf{\large Solution}}
+
+% Probability commands: Expectation, Variance, Covariance, Bias
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\Bias}{\mathrm{Bias}}
+
+% Different math operators
+\DeclareMathOperator{\dom}{Dom}
+\DeclareMathOperator{\diag}{Diag}
+\DeclareMathOperator{\prox}{prox}
+
+%% \mathbb symbols
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\A}{\mathbb{A}}
+\DeclareMathOperator{\R}{\mathbb{R}}
+\DeclareMathOperator{\X}{\mathbb{X}}
+\DeclareMathOperator{\N}{\mathbb{N}}
+\DeclareMathOperator{\Q}{\mathbb{Q}}
+
+%% \mathcal symbols
+\DeclareMathOperator{\RR}{\mathcal{R}}
+\DeclareMathOperator{\PP}{\mathcal{P}}
+\DeclareMathOperator{\NN}{\mathcal{N}}
+\DeclareMathOperator{\CC}{\mathcal{C}}
+
+
+
+\begin{document}
+
+\maketitle
+
+\pagebreak
+
+    
+\begin{homeworkProblem}
+    The following problems concern strong convexity:
+    
+    \begin{itemize}
+    \item[(a)] 	Show that a $C^1$-smooth function $f$ is $\alpha$-strongly convex if and only if the function $g(x) = f (x) - \frac{\alpha}{2} \|x\|^2$ is convex.
+    \medskip
+
+
+    \item[(b)] 	Suppose that $f$ is $\alpha$-strongly convex. Show that any minimizer of $f$ is unique. 
+    \medskip
+
+    \item[(c)] 	Suppose that $f$ is $\alpha$-strongly convex with minimizer $x^*$. Show that 
+    \[
+        f(x) \geq f(x^*) + \frac{\alpha}{2} \|x-x^*\|^2. 
+    \]
+\end{itemize}
+    
+    \textbf{Solution}
+        
+    \begin{itemize}
+        \item[a)] Suppose that $f$ is a strongly convex. Then we have a sequence of equivalent transitions:
+        \begin{equation}
+            \begin{split}
+                f(y) \geq & f(x) + \nabla f(x)^T(y-x) + \frac{\alpha}{2}\|x-y\|^2  = \\
+                = & f(x) + \nabla f(x)^T(y-x) + \frac{\alpha}{2}\left(\|y\|^2 - 2x^Ty + \|x\|^2 \right) = \\
+                = & f(x) + \nabla f(x)^T(y-x) - \alpha x^T(y-x) + \frac{\alpha}{2}\|y\|^2 - \frac{\alpha}{2}\|x\|^2 \\
+            \end{split}
+        \end{equation}
+            so 
+            \[
+                f(y) - \frac{\alpha}{2}\|y\|^2 \geq f(x) - \frac{\alpha}{2}\|x\|^2 + (\nabla f(x) - \alpha x)^T(y-x) 
+            \]
+            which means that $f(x) - \frac{\alpha}{2}\|x\|^2$ is convex. \qed
+            \item[b)] Suppose that there are two different minimizers: $x_1$ and $x_2$:\\
+            \(x_1\text{ -- minimizer } \implies \forall y\: f(y) \geq f(x_1) + \frac{\alpha}{2}\|y - x_1\| \implies f(x_2) \geq f(x_1) + \frac{\alpha}{2}\underbrace{\|x_2 - x_1\|^2}_{> 0} > f(x_1) \) \\ which means that $x_2$ is not a minimizer. \qed
+        \item[c)] By definition: \(f(x) \geq f(x^*) + \nabla \underbrace{f(x^*)}_{=0}^T(x-x^*) + \frac{\alpha}{2}\|x - x^*\|^2 = f(x^*) + \frac{\alpha}{2}\|x - x^*\|^2\)
+    \end{itemize}    
+
+\end{homeworkProblem}
+
+
+\begin{homeworkProblem}
+
+Suppose $f$ is convex.
+\begin{enumerate}
+%\item Prove $\mbox{prox}_f(x) + \mbox{prox}_{f^*}(x) = x$.
+
+\item Prove that $f_t$ is convex.  
+\bigskip
+
+\item Prove that $\prox_{t f}$ is a single-valued mapping. 
+\bigskip
+
+\item Compute $\prox_{t f}$ and $f_t$, where $f(x) = \|x\|_1$. 
+%One way to do this is to consider the scalar case, and explicitly compute $f'(t)$ 
+%\[
+%f'_t(x) = \frac{1}{t} (x-\prox_{t f}(x)).
+%\]
+%Now, just find a function that has this derivative. 
+\bigskip
+\item Compute $\prox_{t f}$ and $f_t$ for $f = \delta_{\mathbb{B}_{\infty}}(x)$, 
+where $\mathbb{B}_\infty = [-1,1]^n$.
+
+\bigskip
+\end{enumerate}
+
+\textbf{Solution}
+
+\begin{itemize}
+    \item[a)] First, we know that $\|*\|^2$ is a convex function. The sum of two convex functions is a convex function, so $\frac{1}{2t}\|x - y\|^2 + f(x)$ is also a convex function. Finally, we know (see the part 5 of lecture notes) that the partial minimization of a convex function is a convex function. Hence, $f_t$ is convex. 
+    \item[b)] Note that $g(x, y) = f(x) + \frac{1}{2t}\|x - y\|^2$ is a strongly convex function as a sum convex and strongly convex: $f$ is convex and the norm is strongly convex. The later is because \(\|x-y\|^2 = (x-y)^TI(x-y)\), so \(\nabla^2\|x-y\|^2 = 2I \succ 0 \). Finally, according to 2b, $g(x)$ has a unique minimizer, which means that $\prox_{tf} = \arg \min_y g(x, y)$ is a single-value function. 
+    \item[c)] 
+\end{itemize} 
+
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+A function is strictly convex if 
+\[
+    f(\lambda x_1 + (1 - \lambda)x_2) < \lambda f(x_1) + (1 - \lambda)f(x_2)
+\]
+$\lambda \in (0,1)$.
+\begin{enumerate}
+    \item[a)] Give an example of a strictly convex function which does not have a minimizer.
+    \item[b)] Show that a sum of a strictly convex function and a convex function is strictly convex.
+    \item[c)] What conditions (if any) are necessary to ensure that the following problems have a unique minimizer?
+    \begin{enumerate}
+        \item[i)] \(\min_x \frac{1}{2}\|Ax - b\|^2\)
+        \item[ii)] \(\min_x \sum_{i = 1}^n \log(1 + e^{a_i^Tx}) - b^TAx\)
+        \item[iii)] \(\min_x \sum_{i = 1}^n \log(1 + e^{a_i^Tx}) - b^TAx + \lambda(\alpha\|x\|_1 + (1 - \alpha)\|x\|^2), \quad \lambda > 0, \, \alpha > 0\)
+    \end{enumerate}
+\end{enumerate}
+
+\textbf{Solution}
+The strict convexity criterion from the Boyd's book "Convex Optimization" will be used:
+
+\[
+    f(x) \text{ is strictly convex} \iff \|\nabla^2f(x)\| > 0 \text{ everywhere}
+\]
+
+\begin{enumerate}
+    \item[a)] An example is \(f(x) = e^x\) as \(\frac{d^2}{dx^2}e^x = e^x > 0\) everywhere, yet \(\arg \min_x e^x = - \infty\) \qed
+    \item[b)] Let $f$ be convex and $g$ be strictly convex.
+    
+    \(f(x) + g(x) = f(\lambda x_1 + (1 - \lambda)x_2) + g(\lambda x_1 + (1 - \lambda)x_2) < f(\lambda x_1 + (1 - \lambda)x_2) + \lambda g(x_1) + (1 - \lambda)g(x_2) \leq \)
+    \\
+    \(\leq \lambda(f(x_1) + g(x_1)) + (1 - \lambda)(f(x_2) + g(x_2))\) \qed
+    \item[c)] For (i) and (ii) the second order necessary conditions (Theorem 2.8 in the course book) will be used: 
+    \[
+        \text{If } x \in U \text{ is a local minimizer, then } \nabla f(x) = 0 \text{ and } \nabla^2 f(x) \succeq 0
+    \] 
+    \begin{enumerate}
+        \item[i)] \(\nabla f(x) = A^T(Ax - b) = 0 \implies A^TAx = A^Tb \) -- the normal equation should hold.
+        Also, \(\nabla^2 f(x) = A^TA \succeq 0\) for all $x$ as \(x^TA^TAx = (Ax)^TAx = \|Ax\| \geq 0\) for all $x$, so this condition always holds. \qed
+        \item[ii)] \(\nabla f(x) = A^T\sigma(Ax) - A^Tb\) where $\sigma(y) = \frac{1}{1+e^{-y}}$, and $\sigma(x) \in \R^n \text{ for } x \in \R^n$ means the vectorized form (element wise application). So we need to ensure that $\sigma(Ax) - b \in Ker(A)$. Also, note that \( \nabla^2f(x) = A^T\diag(\sigma(Ax)\sigma(-Ax))A \succeq 0\) for all $x$: let $M = \sqrt{\diag(\sigma(Ax)\sigma(-Ax))}$ (all the diagonal elements are positive for all $x$), then we have: \(y^TA^T\diag(\sigma(Ax)\sigma(-Ax))Ay = y^TA^TM^TMAy = \|MAy\| = \|Ay\|_{M^TM} \geq 0 \) for all $y \in \R^n$, so the Hessian condition always holds. \qed
+        \item[iii)] This function is strictly convex as a sum of a strictly convex function ($\frac{\lambda}{2}\|x\|^2$) and convex ones (see 3b), so the minimizer is unique, if exists. The function is non-differentiable yet continuous. Hence, due to the Weierstrass Theorem, it is enough to ensure that the domain of the function is finite and convex to guarantee the existence of a unique minimizer.\qed
+    \end{enumerate}
+\end{enumerate}
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+
+Find the global bound for $\beta$ (if any) for the following objectives: 
+\begin{enumerate}
+    \item[a)] \(\frac{1}{2}\|Ax - b\|^2\)
+    \item[b)] \(\sum_{i = 1}^n \log(1 + e^{a^T_ix}) + \frac{\lambda}{2}\|x\|^2 \)
+    \item[c)] \(\sum_{i = 1}^n e^{a^T_ix} - b^TAx\)
+\end{enumerate}
+
+\textbf{Solution}
+For (a) and (b) I'll use the Theorem 1 from the lecture notes: 
+    \[ f \in \CC_\beta^{2, 1} \iff \forall x\: \| \nabla^2f(x)\| \leq \beta \]
+    
+    \begin{enumerate}
+        \item[a)] $\|\nabla^2 f(x)\| = \|A^TA\| = \sigma_1(A^TA) = \beta$ where $\sigma_1(X)$ is the largest singular value for the matrix $X$. \qed
+        \item[b)] $\|\nabla^2 f(x)\| = \|A^T\diag(\sigma(Ax)\sigma(-Ax))A + \lambda I\|  \leq \frac{1}{4}\|A^TA\|\|\diag(\sigma(Ax)\sigma(-Ax))\| + \lambda \leq \frac{1}{4}\sigma_1(A^TA)\max(\sigma(Ax)) + \lambda$ \qed
+        \item[c)] There is no $\beta$ for this function. Let's prove it as contra positive: suppose there is $\beta$ such that for any $x$ and $y$
+        \[
+            \|\nabla f(x) - \nabla f(y)\| \leq \beta\|x - y\|
+        \]
+        holds. Let $y = 0$ and $x_\alpha = \alpha e_i$ such that $e^{a_i} \not \in \ker(A)$. Such $i$ always exists if $A \not = 0^{m \times n}$ So 
+        \[
+            \|\sum_{j = 1}^n a_j(e^{\alpha A_{ij}} - 1) \| = \|Ae^{\alpha a_i}\| \leq \beta\alpha
+        \]
+        
+        Easy to see that $\lim_{\alpha \to \infty} \frac{Ae^{\alpha a_i}}{\alpha} = \infty > \beta$, which concludes the proof. \qed
+        
+    \end{enumerate}
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+    \begin{enumerate}
+        \item[a)]
+        \includegraphics[width=0.9\textwidth]{figures/grad_lgt}
+        \item[b)]
+        \includegraphics[width=0.9\textwidth]{figures/grad_newton_lgt}
+        
+        Both methods converge, yet the Newton method converges 20 times faster than the Gradient Descent. 
+        \item[c)] \includegraphics[width=0.9\textwidth]{figures/grad_newton_poisson}
+        \item[d)] Newton Method converges with acceleration over time, while the Gradient Descent method converges with a fixed rate in terms of a logarithmic plot. It illustrates the theoretical result that the Newton Method converges quadratically while the Gradient Descent algorithm converges linearly. Also, it means that the starting point was pretty close to the solution, as the fixed step-size Newton method converges. 
+    \end{enumerate}
+\end{homeworkProblem}
+
+\end{document}
