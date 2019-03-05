@@ -1,0 +1,463 @@
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+
+\usetikzlibrary{automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\usepackage{graphicx, url}
+\graphicspath{figures/}
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+\chead{\hmwkClass}
+\rhead{\hmwkTitle}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
+}
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Problem \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+%   - Title
+%   - Due date
+%   - Class
+%   - Section/Time
+%   - Instructor
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{Homework\ \#3}
+\newcommand{\hmwkDueDate}{March 4, 2019}
+\newcommand{\hmwkClass}{AMATH 515 (Optimization)}
+\newcommand{\hmwkClassTime}{Section A}
+\newcommand{\hmwkClassInstructor}{Prof. Alexander Aravkin}
+\newcommand{\hmwkAuthorName}{\textbf{Alexey Sholokhov}}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 23:59}\\
+    \vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
+    \vspace{3in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+%
+% Various Helper Commands
+%
+
+% Useful for algorithms
+\newcommand{\alg}[1]{\textsc{\bfseries \footnotesize #1}}
+
+% For derivatives
+\newcommand{\deriv}[1]{\frac{\mathrm{d}}{\mathrm{d}x} (#1)}
+
+% For partial derivatives
+\newcommand{\pderiv}[2]{\frac{\partial}{\partial #1} (#2)}
+
+% Integral dx
+\newcommand{\dx}{\mathrm{d}x}
+
+% Alias for the Solution section header
+\newcommand{\solution}{\textbf{\large Solution}}
+
+% Probability commands: Expectation, Variance, Covariance, Bias
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\Bias}{\mathrm{Bias}}
+
+% Different math operators
+\DeclareMathOperator{\dom}{Dom}
+\DeclareMathOperator{\diag}{Diag}
+\DeclareMathOperator{\prox}{prox}
+\DeclareMathOperator*{\proj}{proj}
+\DeclareMathOperator*{\sign}{sign}
+
+%% \mathbb symbols
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\A}{\mathbb{A}}
+\DeclareMathOperator{\R}{\mathbb{R}}
+\DeclareMathOperator{\X}{\mathbb{X}}
+\DeclareMathOperator{\N}{\mathbb{N}}
+\DeclareMathOperator{\Q}{\mathbb{Q}}
+
+%% \mathcal symbols
+\DeclareMathOperator{\RR}{\mathcal{R}}
+\DeclareMathOperator{\PP}{\mathcal{P}}
+\DeclareMathOperator{\NN}{\mathcal{N}}
+\DeclareMathOperator{\CC}{\mathcal{C}}
+
+
+
+\begin{document}
+
+\maketitle
+
+\pagebreak
+
+    
+\begin{homeworkProblem}Compute the conjugates of the following functions.  
+\begin{enumerate}
+\item $f(x) = \delta_{\mathbb{B}_{\infty}}(x)$.
+\item $f(x) = \delta_{\mathbb{B}_{2}}(x)$.
+\item $f(x) = \exp(x)$.
+\item $f(x) =  \log(1+\exp(x))$
+\item $f(x) = x\log(x)$
+\end{enumerate}
+    
+\solution
+\begin{enumerate}
+    \item $B_\infty = \{x\, |\: \max (|x_1|, \dots |x_n|) \leq 1\}$
+     \[ f^*(z) = \sup_x\{ x^Tz - \delta_{B_\infty}(x)\} = \sup_{x \in B_\infty}x^Tz = \sum_{i=1}^n x_i*\sign(x_i) = \|x\|_1 \]
+    \item $f(x) = \delta_{B_2}(x) \implies f^*(z) = \sup_{x \in B_2} z^Tx = \frac{z^Tz}{\|z\|_2} = \|z\|_2$
+    \item $f(x) = \exp(x) \implies f^*(z) = \sup_x\{zx - \exp(x)\}$ \\
+        \[
+            \frac{\partial}{\partial x}(zx - \exp(x)) = z - exp(x) = 0 \implies x = \ln(z) 
+        \]
+        Substituting this value back
+        \[
+            f^*(z) = z\ln z - z 
+        \]
+    \item $f(x) = \log(1 + \exp(x)) \implies f^*(z) = \sup_x\{zx - \log(1 + \exp(x))\} = (*) $
+        \[ 
+            \frac{\partial}{\partial x}(zx - \log(1 + \exp(x))) = z - \frac{\exp(x)}{1 + \exp(x)} = 0 \implies x = \ln\frac{z}{1-z}
+        \]
+        
+        $(*) = z\log \frac{z}{1-z} - \log\left(1+\frac{z}{1-z}\right) = z\log \frac{z}{1-z} - \log \frac{1}{1-z}  =\log(1-z)(1-z\log z)$
+    \item $f(x) = x\log x \implies f^*(z) = \sup_x\{zx - x\log x\} = (*)$
+        \[
+            \begin{split}
+            \frac{\partial}{\partial x} (zx - x\log x) =& z - (\log x + 1) = 0 \\
+            x = & e^{z-1}
+            \end{split}
+        \] 
+        $(*) = ze^{z-1} - (z-1)e^{z-1} = e^{z-1}$
+        
+        
+\end{enumerate}
+
+\end{homeworkProblem}
+
+
+\begin{homeworkProblem}
+
+Let $g$ be any convex function; $f$ is formed using $g$.
+Compute $f^*$ in terms of $g^*$.  
+\begin{enumerate}
+\item $f(x) = \lambda g(x)$.
+\item $f(x) = g(x-a) + \langle x, b \rangle$.
+\item $f(x) = \inf_z \left\{g(x,z)\right\}$. 
+\item $f(x) = \inf_z \left\{\frac{1}{2}\|x-z\|^2 + g(z)\right\}$
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}
+    \item $f(x) = \lambda g(x)$
+    \[
+        f^*(z) = \sup_x \{ z^Tx - \lambda g(x)\} = \lambda \sup_x\left\{\left(\frac{1}{\lambda} z\right)^Tx - g(x)\right\} = \lambda g^*\left(\frac{1}{\lambda} z\right)
+    \] \qed
+    \item $f(x) = g(x-a) + x^Tb$
+    \[
+        \begin{split}
+        f^*(z) = & \sup_x \{z^Tx - x^Tb - g(x-a)\} = \sup_x\{x^T(z-b) - g(x-a)\} = \sup_\xi \{(\xi + a)^T(z-b) - g(\xi)\} = \\
+        = & a^T(z-b) + g^*(z-b)
+        \end{split} 
+    \]
+    \qed
+    \item $f(x) = \inf_z\{g(x, z)\} $
+    \[
+        f^*(k) = \sup_k\{k^Tx - \inf_z g(x, z)\} = \sup_{x, z}\{k^Tx + 0^Tz - g(x, z)\} = g^*(k, 0)
+    \]
+    \qed
+    \item $f(x) = \inf_z \{\frac{1}{2}\|x - z\|^2 + g(z)\}$
+    \[ 
+    \begin{split}
+        f^*(k) = & \sup_x\{k^Tx - \inf_z\{\frac{1}{2}\|x - z\|^2 + g(z)\}\} = \sup_x\{\sup_z \{k^Tx - \frac{1}{2}\|x - z\|^2 - g(z)\}\} = \\
+        = & \sup_z\{\sup_x \{k^Tx - \frac{1}{2}\|x - z\|^2\} - g(z)\}
+    \end{split}
+    \]
+    The internal $\sup_x$ is
+    \[
+        \frac{\partial }{\partial x}(k^Tx - \frac{1}{2}\|x - z\|^2) = k - (x - z) = 0 \implies x = k + z 
+    \]
+    substituting $x$ back:
+    \[
+        f^*(k) = \sup_z \{k^T(k+z) - \frac{1}{2}\|k\|^2 - g(z)\} = \sup_z \{k^Tz - g(z)\} + \frac{1}{2}\|k\|^2 = \frac{1}{2}\|k\|^2 + g^*(k) 
+    \]
+    \qed
+    
+\end{enumerate}
+
+
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+
+Moreau Identities.
+\begin{enumerate}
+\item  Derive the Moreau Identity: 
+\[
+\mbox{prox}_{f}(z) + \mbox{prox}_{f^*}(z) = z. 
+\]
+You may find the `Fenchel flip' useful. 
+
+\bigskip 
+\item Use either of the Moreau identities and 
+1a, 1b to check your formulas for 
+\[
+\mbox{prox}_{\|\cdot\|_1}, \quad \mbox{prox}_{\|\cdot\|_2}
+\]
+from last week's homework. 
+\end{enumerate}
+
+\solution
+
+\begin{enumerate}
+    \item Let $a(z) = \prox_f(z)$ and $b(z) = \prox_{f^*}(z)$. We need to prove that $z = a + b$ for all $z$. 
+    \[
+        a = \prox_f(z) = \arg \min_x\left\{\frac{1}{2}\|x - z\|^2 + f(x) \right\} \iff 0 \in (a - z) + \partial f(a)  
+    \]
+    We use the Fenchel flip
+    \[
+        z - a \in \partial f(a) \iff a \in \partial f^*(z-a)
+    \]
+    Next, we change variables:
+    \[
+        \text{Let } v = z-a \implies z-v \in \partial f^*(v)
+    \]
+    But by the definition of the proximal operator: 
+    \[
+        z - v \in \partial f^*(v) \implies v = \prox_{f^*}(z) \equiv b
+    \]
+    So we get
+    \[
+        b = z - a \implies z = a + b = \prox_f(z) + \prox_{f^*}(z)
+    \] \qed
+    
+    \item \begin{enumerate}
+        \item  According to the previous homework: $f(x) = \prox_{\|.\|_1}(x) = \begin{cases}
+            x_i - 1 & x_i \geq 1 \\
+            x_i + 1 &  x_i \leq -1 \\
+            0 & x_i \in [-1, 1] 
+        \end{cases}$\\
+        According to the Moreau identities: $x = \prox_{\|.\|_1}(x) + \prox_{\|.\|_1^*}(x) \implies \prox_{\|.\|_1} = x - \prox_{\|.\|_1^*}(x)$
+        \[
+            \prox_{\|.\|_1^*}(x) = \prox_{\delta_{B_\infty}}(x) = \proj_{B_\infty}(x) = \begin{cases}
+                x_i & x_i \in [-1, 1] \\
+                1 & v_i \geq 1 \\
+                -1 & v_i \leq -1
+            \end{cases} = a(x)
+        \]
+        So 
+        \[
+            \prox_{\|.\|_1^*}(x) = x - a(x) = \begin{cases}
+            x_i - 1 & x_i \geq 1 \\
+            x_i + 1 &  x_i \leq -1 \\
+            0 & x_i \in [-1, 1] 
+        \end{cases}
+        \]
+        which matches to the previous homework's result. \qed
+        
+        \item According to the previous homework: $\prox_{\|.\|_2}(x) = x - \frac{x}{\|x\|_2}$.\\
+        Using the Moreau identity: 
+        \[
+            x = \prox_{\|.\|_2}(x) + \prox_{\|.\|_2^*}(x) \implies \prox_{\|.\|_2}(x) = x - \prox_{\|.\|_2^*}(x)
+        \]
+        The conjugate function of the second norm is
+        \[
+            \|x\|_2^* = \sup_y\{x^Ty - \|y\|_2\}
+        \]
+        Using the optimality criterion
+        \[
+            \frac{\partial }{\partial y} \left(x^Ty - \|y\|_2\right) = x - \frac{y}{\|y\|_2} = 0 \implies y = \begin{cases}
+                        x & \|x\|_2 = 1 \\
+                        \text{does not exist} & \|x\|_2 \neq 1
+                    \end{cases}
+            \]
+        The function $x^Ty - \|y\|_2$ is strictly concave, hence if its stationary points w.r.t. $y$ don't exist it implies that $sup_y\{x^Ty - \|y\|_2\} = \infty$. Consequently
+        \[
+            \|x\|_2^* = \delta_{\mathring B_2}(x) \text{ where } \mathring B_{2} = \{x\, |\: \|x\|_2 = 1\}
+        \]
+        So for the proximal operator of the conjugate we have
+        \[
+            \prox_{\|.\|_2^*}(x) = \proj_{\mathring B_2}(x) = \frac{x}{\|x\|_2}
+        \]
+        And for the proximal operator of the second norm
+        \[
+            \prox_{\|.\|_2}(x) = x - \prox_{\|.\|_2^*}(x) = x - \frac{x}{\|x\|_2}
+        \]
+        Which matches to the previous homework's result.  \qed
+        \end{enumerate}
+\end{enumerate}
+
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+
+Duals of regularized GLM. Consider the Generalized Linear Model family: 
+\[
+\min_{x} \sum_{i=1}^n g(\langle a_i, x\rangle) - b^TAx + R(x),
+\]
+Where $g$ is convex and $R$ is any regularizer. 
+\begin{enumerate}
+\item Write down the general dual obtained from the perturbation 
+\[
+p(u) = \min_{x} \sum_{i=1}^n g(\langle a_i, x\rangle + u_i) - b^TAx + R(x).
+\]
+\bigskip\bigskip
+\item Specify your formula to Ridge-regularized logistic regression: 
+\[
+\min_x \sum_{i=1}^n \log(1+\exp(\langle a_i, x \rangle))  - b^TAx  + \frac{\lambda}{2}\|x\|^2. 
+\]
+\bigskip\bigskip
+\item Specify your formula to 1-norm regularized Poisson regression: 
+\[
+\min_x \sum_{i=1}^n \exp(\langle a_i, x \rangle) - b^TAx +  \lambda\|x\|_1. 
+\]
+\end{enumerate}
+
+\solution
+
+\begin{enumerate}
+    \item According to the lecture material, the dual problem can be written using the perturbation approach as following: 
+    \[
+        sup_v -p^*(v) = sup_v-\phi^*(0, v)
+    \]
+    where $\phi(x, v)$ is defined as
+    \[
+    p(u) = \min_x \phi(x, u) = \min_x \sum_{i=1}^n g(\langle a_i, x\rangle + u_i) - b^TAx + R(x)
+    \]
+    We need to find the conjugate of $\phi(x, u)$
+    \[
+        \begin{split}
+            \phi^*(z, v) = & \sup_{x, u} \{x^Tz + v^Tu - \sum_{i=1}^n g(\langle a_i, x\rangle + u_i) + b^TAx - R(x) \} = \\
+            & \text{Let } w_i = a_i^Tx + u_i \implies w = Ax + u \implies u = w - Ax \\
+            = & \sup_{x, w}\{x^T(z-A^Tb) + v^T(w - Ax) - \sum_{i=1}^n g(w_i) - R(x)\} \\
+            = & \sup_{x, w}\{x^T(z + A^Tb - A^Tv) + v^Tw - \sum_{i=1}^n g(w_i) - R(x)\} = \\
+            = & \sup_{x, w}\{x^T(z + A^Tb - A^Tv) - R(x) + \sum_{i=1}^n\left( v_iw_i - g(w_i) \right)\} = \\
+            = & R^*(z + A^Tb - A^Tv) + \sum_{i=1}^n g^*(v_i)
+        \end{split}
+    \]
+    
+    So the dual problem is
+    
+    \[
+        \sup_v - p^*(v) = \sup_v -\phi(0, v) = \sup_v -R^*(A^T(b-v)) - \sum_{i=1}^n g^*(v_i)
+    \]
+    
+    \item 
+    \[
+    \min_x \sum_{i=1}^n \log(1+\exp(\langle a_i, x \rangle))  - b^TAx  + \frac{\lambda}{2}\|x\|^2. 
+    \]
+    Matching parts of this loss with our result from 4a:
+    
+    \[
+        R^*(x) = \left(\frac{\lambda}{2}\|x\|_2^2\right) = \frac{\lambda}{2}\|x\|_2^2 \text{ -- as the second norm squared is self-conjugate }
+    \]
+    \[
+        g(x) = \log(1+e^x) \implies g^*(z) = \log(1-z)(1 - z \log z) \text{ -- from 1.4}
+    \]
+    So the dual problem would be: 
+    \[
+        \sup_v - \frac{\lambda}{2}\|A^T(b-v)\|_2^2 - \sum_{i=1}^n \log(1-v_i)(1- v_i\log v_i)
+    \]
+    
+    \item 
+    \[
+\min_x \sum_{i=1}^n \exp(\langle a_i, x \rangle) - b^TAx +  \lambda\|x\|_1. 
+\]
+    Matching parts of this loss with our result from 4a:
+    \[
+        R^*(x) = \left(\lambda\|.\|_1\right)^*(x) = \delta_{\lambda B_\infty}(x)
+    \]
+    \[
+        g(x) = \exp(x) \implies g^*(z) = z\log z -z \text{ -- from 1.3}
+    \]
+    So the dual problem would be: 
+    \[
+        \begin{split}
+        \sup_v & -\sum_{i=1}^nv_i\log v_i - v_i \\
+        s.t.\: & A^T(b-v) \in \lambda B_{\infty}
+        \end{split}
+    \]
+\end{enumerate}
+    
+\end{homeworkProblem}
+
+
+\textbf{The coding assignment is in .ipynb file attached to this homework}.
+
+\end{document}
