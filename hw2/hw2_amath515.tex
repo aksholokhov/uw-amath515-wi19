@@ -141,6 +141,8 @@
 \DeclareMathOperator{\dom}{Dom}
 \DeclareMathOperator{\diag}{Diag}
 \DeclareMathOperator{\prox}{prox}
+\DeclareMathOperator*{\proj}{proj}
+\DeclareMathOperator*{\sign}{sign}
 
 %% \mathbb symbols
 \DeclareMathOperator{\E}{\mathbb{E}}
@@ -182,10 +184,10 @@
     \]
 \end{itemize}
     
-    \textbf{Solution}
+\solution
         
     \begin{itemize}
-        \item[a)] Suppose that $f$ is a strongly convex. Then we have a sequence of equivalent transitions:
+        \item[a)] Suppose that $f$ is $\alpha$-strongly convex. Then we have a sequence of equivalent transitions:
         \begin{equation}
             \begin{split}
                 f(y) \geq & f(x) + \nabla f(x)^T(y-x) + \frac{\alpha}{2}\|x-y\|^2  = \\
@@ -193,14 +195,14 @@
                 = & f(x) + \nabla f(x)^T(y-x) - \alpha x^T(y-x) + \frac{\alpha}{2}\|y\|^2 - \frac{\alpha}{2}\|x\|^2 \\
             \end{split}
         \end{equation}
-            so 
+            so it is equivalent to:
             \[
                 f(y) - \frac{\alpha}{2}\|y\|^2 \geq f(x) - \frac{\alpha}{2}\|x\|^2 + (\nabla f(x) - \alpha x)^T(y-x) 
             \]
             which means that $f(x) - \frac{\alpha}{2}\|x\|^2$ is convex. \qed
             \item[b)] Suppose that there are two different minimizers: $x_1$ and $x_2$:\\
-            \(x_1\text{ -- minimizer } \implies \forall y\: f(y) \geq f(x_1) + \frac{\alpha}{2}\|y - x_1\| \implies f(x_2) \geq f(x_1) + \frac{\alpha}{2}\underbrace{\|x_2 - x_1\|^2}_{> 0} > f(x_1) \) \\ which means that $x_2$ is not a minimizer. \qed
-        \item[c)] By definition: \(f(x) \geq f(x^*) + \nabla \underbrace{f(x^*)}_{=0}^T(x-x^*) + \frac{\alpha}{2}\|x - x^*\|^2 = f(x^*) + \frac{\alpha}{2}\|x - x^*\|^2\)
+            \(x_1\text{ -- minimizer } \implies \forall y\: f(y) \geq f(x_1) + \frac{\alpha}{2}\|y - x_1\| \implies f(x_2) \geq f(x_1) + \frac{\alpha}{2}\underbrace{\|x_2 - x_1\|^2}_{> 0} > f(x_1) \) \\ which means that $x_2$ is not a minimizer. Contradiction. \qed
+        \item[c)] By definition: \(f(x) \geq f(x^*) + \nabla \underbrace{f(x^*)^T}_{=0}(x-x^*) + \frac{\alpha}{2}\|x - x^*\|^2 = f(x^*) + \frac{\alpha}{2}\|x - x^*\|^2\) \qed
     \end{itemize}    
 
 \end{homeworkProblem}
@@ -230,102 +232,176 @@ where $\mathbb{B}_\infty = [-1,1]^n$.
 
 \bigskip
 \end{enumerate}
+\newpage
 
-\textbf{Solution}
+\solution
 
 \begin{itemize}
-    \item[a)] First, we know that $\|*\|^2$ is a convex function. The sum of two convex functions is a convex function, so $\frac{1}{2t}\|x - y\|^2 + f(x)$ is also a convex function. Finally, we know (see the part 5 of lecture notes) that the partial minimization of a convex function is a convex function. Hence, $f_t$ is convex. 
-    \item[b)] Note that $g(x, y) = f(x) + \frac{1}{2t}\|x - y\|^2$ is a strongly convex function as a sum convex and strongly convex: $f$ is convex and the norm is strongly convex. The later is because \(\|x-y\|^2 = (x-y)^TI(x-y)\), so \(\nabla^2\|x-y\|^2 = 2I \succ 0 \). Finally, according to 2b, $g(x)$ has a unique minimizer, which means that $\prox_{tf} = \arg \min_y g(x, y)$ is a single-value function. 
-    \item[c)] 
+    \item[a)] First, we know that $\|*\|^2$ is a convex function. The sum of two convex functions is a convex function, so $\frac{1}{2t}\|x - y\|^2 + f(x)$ is also a convex function. Finally, we know (see the part 5 of lecture notes) that the partially minimized convex function is a convex function. Hence, $f_t$ is convex. \qed
+    \item[b)] Note that $g(x, y) = f(x) + \frac{1}{2t}\|x - y\|^2$ is a strongly convex function as a sum convex and strongly convex: $f$ is convex and the norm is strongly convex. The later is because \(\|x-y\|^2 = (x-y)^TI(x-y)\), so \(\nabla^2\|x-y\|^2 = 2I \succ 0 \). So, according to 2b, $g(x)$ has a unique minimizer, which means that $\prox_{tf} = \arg \min_y g(x, y)$ is a single-value function. \qed
+    \item[c)]
+    \[
+        \prox_{tf}(y) = \arg \min_x \frac{1}{2t}\|x - y\|_2^2 + \|x\|_1
+    \]
+    
+    According to the optimality criteria for convex functions:
+    \[
+        \frac{x-y}{t} \in -\partial\|x\|_1
+    \]
+    \begin{equation} 
+    \begin{split}
+        x_j > 0, & y_j - x_j = -t \implies x_j = y_j + t,\, y_j < -t \\
+        x_j < 0, & y_j - x_j = +t \implies x_j = y_j - t, \, y_j > t \\
+        x_j = 0 & \, \implies x_j = 0,\, y_j \in [-t, t]  
+    \end{split}
+    \end{equation}
+    or in the more compact form: 
+    \[
+        \prox_{tf}(y) = (y-t)_+ - (-y-t)_+
+    \]
+    Where $\text{(  )}_+$ is a positive slice. Consequently 
+    \[
+        f_t(y) = \frac{1}{2t}\|(y-t)_+ - (-y-t)_+ - y\| + \|(y-t)_+ - (-y-t)_+\|_1
+    \]
+    \qed
+    \item[d)] \[
+        \prox_{tf}(y) = \arg \min_x \frac{1}{2t}\|x - y\|^2 + \delta_{B_{\infty}}(x) = \arg \min_{x \in B_\infty}\|x-y\|^2 = \proj_{B_\infty}({y}) = \max(-1, \min(1, y))
+    \]
+    where $\max$ and $\min$ are element wise maximum and minimum respectively. Also 
+    
+    \[
+        f_t(y) = \min_{x} \frac{1}{2t}\|x - y\|^2 + \delta_{B_\infty}(x) = \frac{1}{2t}\|\max(-1, \min(1, y)) - y\|^2
+    \]
+    
+    
+    \qed
+    
+    
 \end{itemize} 
 
 \end{homeworkProblem}
 
 \begin{homeworkProblem}
-A function is strictly convex if 
-\[
-    f(\lambda x_1 + (1 - \lambda)x_2) < \lambda f(x_1) + (1 - \lambda)f(x_2)
-\]
-$\lambda \in (0,1)$.
+More prox identities. 
+\vskip 16pt
 \begin{enumerate}
-    \item[a)] Give an example of a strictly convex function which does not have a minimizer.
-    \item[b)] Show that a sum of a strictly convex function and a convex function is strictly convex.
-    \item[c)] What conditions (if any) are necessary to ensure that the following problems have a unique minimizer?
-    \begin{enumerate}
-        \item[i)] \(\min_x \frac{1}{2}\|Ax - b\|^2\)
-        \item[ii)] \(\min_x \sum_{i = 1}^n \log(1 + e^{a_i^Tx}) - b^TAx\)
-        \item[iii)] \(\min_x \sum_{i = 1}^n \log(1 + e^{a_i^Tx}) - b^TAx + \lambda(\alpha\|x\|_1 + (1 - \alpha)\|x\|^2), \quad \lambda > 0, \, \alpha > 0\)
-    \end{enumerate}
+%\item Prove $\mbox{prox}_f(x) + \mbox{prox}_{f^*}(x) = x$.
+
+\item Suppose $f$ is convex and let $g(x) = f(x) + \frac{1}{2}\|x-x_0\|^2$. 
+Find formulas for $\prox_{t g}$ and $g_t$ in terms of $\prox_{t f}$ and $f_t$.
+\bigskip
+
+\item The elastic net penalty is used to detect groups of correlated predictors:
+\[
+g(x) = \beta \|x\|_1 + (1-\beta) \frac{1}{2}\|x\|^2, \quad \beta \in (0,1).
+\] 
+Write down the formula for $\prox_{t g}$ and $g_t$.
+\bigskip
+
+\item Let $f(x) = \frac{1}{2}\|Cx\|^2$. Write $\prox_{t f}(y)$ in closed form.
+
+\bigskip
+
+\item Let $f(x) = \|x\|_2$. Write $\prox_{tf}(y)$ in closed form.
+
 \end{enumerate}
 
-\textbf{Solution}
-The strict convexity criterion from the Boyd's book "Convex Optimization" will be used:
-
-\[
-    f(x) \text{ is strictly convex} \iff \|\nabla^2f(x)\| > 0 \text{ everywhere}
-\]
+\solution
 
 \begin{enumerate}
-    \item[a)] An example is \(f(x) = e^x\) as \(\frac{d^2}{dx^2}e^x = e^x > 0\) everywhere, yet \(\arg \min_x e^x = - \infty\) \qed
-    \item[b)] Let $f$ be convex and $g$ be strictly convex.
+    \item[a)] Let \(g(x) = f(x) + \frac{1}{2}\|x - x_0\|^2 \)
     
-    \(f(x) + g(x) = f(\lambda x_1 + (1 - \lambda)x_2) + g(\lambda x_1 + (1 - \lambda)x_2) < f(\lambda x_1 + (1 - \lambda)x_2) + \lambda g(x_1) + (1 - \lambda)g(x_2) \leq \)
-    \\
-    \(\leq \lambda(f(x_1) + g(x_1)) + (1 - \lambda)(f(x_2) + g(x_2))\) \qed
-    \item[c)] For (i) and (ii) the second order necessary conditions (Theorem 2.8 in the course book) will be used: 
+    \begin{equation}
+        \begin{split}
+            \prox_{tg}(x) =& \arg \min_{y} \frac{1}{2t}\|x - y\|^2 + f(y) + \frac{1}{2}\|y - x_0\| = \\
+            = & \arg \min_y f(y) + \frac{1}{2t}\left(x^Tx - 2x^Ty + y^Ty\right) + \frac{1}{2}\left(y^Ty - 2x_0^Ty + x_0^Tx_0 \right) = \\
+            = & \arg \min_y f(y) + \frac{1}{2}
+            \left(y^Ty\left(\frac{1+t}{1}\right) - 2y^T\left(\frac{1}{t}x+x_0\right)+\frac{1}{t}x^Tx + x^T_0x_0\right) = \\
+            = & \arg \min_{y} f(y) + \frac{1}{2\underbrace{\frac{t}{1+t}}_{:= \lambda}}\left(y^Ty - 2y^T\left(\frac{1}{t+1}x + \frac{t}{t+1}x_0\right) + \underbrace{\frac{1}{t+1}x^Tx + \frac{t}{t+1}x_0^Tx_0}_{\text{does not depend on y}} \right)
+        \end{split}
+    \end{equation}
+    Note that the last term does not depend on $y$, so it does not affect \(\arg \min_y\), hence, we can replace it with something else, which also does not depend on $y$:
+    \begin{equation}
+        \begin{split}
+            = & \arg \min_y f(y) + \frac{1}{2\lambda}\left(y^Ty - 2y^T\left(\frac{\lambda}{t}x + \lambda x_0\right) + \underbrace{\|\frac{\lambda}{t}x + \lambda x_0\|^2}_{\text{this also does not depend on }y}\right)  = \\
+            = & \arg \min_y f(y) + \frac{1}{2\lambda}\|y - \frac{\lambda}{t}x - \lambda x_0 \|^2 = \prox_{\lambda f}\left(\frac{\lambda}{t}x +\lambda x_0 \right)\text{, where } \lambda = \frac{t}{1+t}
+        \end{split}
+    \end{equation} 
+    
+    For $g_t(x)$ we have:
+    
+    \begin{equation}
+        \begin{split}
+            g_t(x) =& \min_{y} \frac{1}{2t}\|x - y\|^2 + f(y) + \frac{1}{2}\|y - x_0\| = \\
+            = & \min_{y} f(y) + \frac{1}{2\underbrace{\frac{t}{1+t}}_{:= \lambda}}\left(y^Ty - 2y^T\left(\frac{1}{t+1}x + \frac{t}{t+1}x_0\right) + \frac{1}{t+1}x^Tx + \frac{t}{t+1}x_0^Tx_0 \right) = \\
+            = & \min_y f(y) + \frac{1}{2\lambda}\|y - \frac{\lambda}{t}x - \lambda x_0 \|^2 - \|\frac{\lambda}{t}x + \lambda x_0\|^2 + \frac{\lambda}{t}x^Tx + \lambda x_0^Tx_0 = \\
+            = & f_\lambda\left(\frac{\lambda}{t}x + \lambda x_0\right) - \|\frac{\lambda}{t}x + \lambda x_0\|^2 + \frac{\lambda}{t}x^Tx + \lambda x_0^Tx_0
+        \end{split}
+    \end{equation}
+     
+    \qed
+    
+    \item[b)] \[ \prox_{tg}(y) = \arg \min_x \beta\|x\|_1 + (1 - \beta)\frac{1}{2}\|x\|^2 + \frac{1}{2t}\|x - y\|^2 \]
+    We use the sub-differential criterion for optimality:
+    
+    \begin{equation}
+        \begin{split}
+            0 \in \partial\beta |x_i| + & (1 - \beta)x_i + \frac{1}{t}(x_i - y_i) \\
+            \text{1) } x_i < 0 \implies & t\beta = (1+t(1-\beta))x_i - y_i \\
+            & \frac{t\beta+y_i}{1 + t(1 - \beta)} = x_i > 0 \implies y_i < -t\beta\\
+            \text{2) } x_i > 0 \implies & -t\beta = (1+t(1-\beta))x_i - y_i \\
+            & \frac{y_i-t\beta}{1+t(1-\beta)} = x_i > 0 \implies y_i > t\beta\\
+            \text{3) } x_i = 0 \implies & y_i \in [-t\beta;\, t\beta] 
+        \end{split}
+    \end{equation}
+    Summing up:
+    \begin{equation}
+        [\prox_{tg}(y)]_i = \begin{cases}
+            \frac{y_i + t\beta}{1 + t(1 - \beta)} & y_i < -t\beta\\
+            \frac{y_i - t\beta}{1+t(1-\beta)} & y_i > t\beta \\
+            0 & y_i \in [-t\beta;\,t\beta]
+        \end{cases}
+    \end{equation}
+    
+    As we know the $\prox_{tg}$ we can define $g_t(y)$ as
+    
     \[
-        \text{If } x \in U \text{ is a local minimizer, then } \nabla f(x) = 0 \text{ and } \nabla^2 f(x) \succeq 0
+        g_t(y) =\beta\|x^*\|_1 + (1 - \beta)\frac{1}{2}\|x^*\|^2 + \frac{1}{2t}\|x^* - y\|^2 \text{ where } x^* = \prox_{tg}(y)
     \] 
-    \begin{enumerate}
-        \item[i)] \(\nabla f(x) = A^T(Ax - b) = 0 \implies A^TAx = A^Tb \) -- the normal equation should hold.
-        Also, \(\nabla^2 f(x) = A^TA \succeq 0\) for all $x$ as \(x^TA^TAx = (Ax)^TAx = \|Ax\| \geq 0\) for all $x$, so this condition always holds. \qed
-        \item[ii)] \(\nabla f(x) = A^T\sigma(Ax) - A^Tb\) where $\sigma(y) = \frac{1}{1+e^{-y}}$, and $\sigma(x) \in \R^n \text{ for } x \in \R^n$ means the vectorized form (element wise application). So we need to ensure that $\sigma(Ax) - b \in Ker(A)$. Also, note that \( \nabla^2f(x) = A^T\diag(\sigma(Ax)\sigma(-Ax))A \succeq 0\) for all $x$: let $M = \sqrt{\diag(\sigma(Ax)\sigma(-Ax))}$ (all the diagonal elements are positive for all $x$), then we have: \(y^TA^T\diag(\sigma(Ax)\sigma(-Ax))Ay = y^TA^TM^TMAy = \|MAy\| = \|Ay\|_{M^TM} \geq 0 \) for all $y \in \R^n$, so the Hessian condition always holds. \qed
-        \item[iii)] This function is strictly convex as a sum of a strictly convex function ($\frac{\lambda}{2}\|x\|^2$) and convex ones (see 3b), so the minimizer is unique, if exists. The function is non-differentiable yet continuous. Hence, due to the Weierstrass Theorem, it is enough to ensure that the domain of the function is finite and convex to guarantee the existence of a unique minimizer.\qed
-    \end{enumerate}
-\end{enumerate}
-\end{homeworkProblem}
-
-\begin{homeworkProblem}
-
-Find the global bound for $\beta$ (if any) for the following objectives: 
-\begin{enumerate}
-    \item[a)] \(\frac{1}{2}\|Ax - b\|^2\)
-    \item[b)] \(\sum_{i = 1}^n \log(1 + e^{a^T_ix}) + \frac{\lambda}{2}\|x\|^2 \)
-    \item[c)] \(\sum_{i = 1}^n e^{a^T_ix} - b^TAx\)
-\end{enumerate}
-
-\textbf{Solution}
-For (a) and (b) I'll use the Theorem 1 from the lecture notes: 
-    \[ f \in \CC_\beta^{2, 1} \iff \forall x\: \| \nabla^2f(x)\| \leq \beta \]
     
-    \begin{enumerate}
-        \item[a)] $\|\nabla^2 f(x)\| = \|A^TA\| = \sigma_1(A^TA) = \beta$ where $\sigma_1(X)$ is the largest singular value for the matrix $X$. \qed
-        \item[b)] $\|\nabla^2 f(x)\| = \|A^T\diag(\sigma(Ax)\sigma(-Ax))A + \lambda I\|  \leq \frac{1}{4}\|A^TA\|\|\diag(\sigma(Ax)\sigma(-Ax))\| + \lambda \leq \frac{1}{4}\sigma_1(A^TA)\max(\sigma(Ax)) + \lambda$ \qed
-        \item[c)] There is no $\beta$ for this function. Let's prove it as contra positive: suppose there is $\beta$ such that for any $x$ and $y$
-        \[
-            \|\nabla f(x) - \nabla f(y)\| \leq \beta\|x - y\|
-        \]
-        holds. Let $y = 0$ and $x_\alpha = \alpha e_i$ such that $e^{a_i} \not \in \ker(A)$. Such $i$ always exists if $A \not = 0^{m \times n}$ So 
-        \[
-            \|\sum_{j = 1}^n a_j(e^{\alpha A_{ij}} - 1) \| = \|Ae^{\alpha a_i}\| \leq \beta\alpha
-        \]
+    \qed
+    \item[c)] As the function under the argmin is convex and smooth, we will use the first order optimality criteria:
+        \begin{equation}
+            \begin{split}
+                f(x) = & \frac{1}{2}\|Cx\|^2 \\
+                \prox_{tf}(y) = & \arg \min_x \frac{1}{2t}\|x - y\|^2 + \frac{1}{2}\|Cx\|^2 \\
+                \nabla  = & \frac{1}{t}(x-y)+C^TCx = 0\\
+                & (I + C^TC)x = y\\
+                \prox_{tf}(y) = & x = (I + tC^TC)^{-1}y
+            \end{split}
+        \end{equation}
+        \qed
         
-        Easy to see that $\lim_{\alpha \to \infty} \frac{Ae^{\alpha a_i}}{\alpha} = \infty > \beta$, which concludes the proof. \qed
-        
-    \end{enumerate}
+    \item[d)] 
+    \[
+        \prox_{tf}(y) = \arg \min_x \frac{1}{2t}\|x - y\|^2 + \|x\|_2
+    \]
+    As the function under the argmin is convex and smooth, we will use the first order optimality criteria:
+    
+    \begin{equation}
+        \begin{split}
+            \nabla = & \; \frac{1}{t}(x-y) + \frac{x}{\|x\|} = 0 \\
+            y = & \; x\left(1 + \frac{t}{\|x\|}\right) \implies x = \alpha y \text{ for some } \alpha \in \R_{++} \text{ as } t > 0 \\
+            y = & \; \alpha y + \frac{t\alpha y}{\alpha\|y\|} \\ 
+            \alpha = & \; 1 - \frac{t}{\|y\|} \text{, so:} \\
+            \prox_{tf}(y) = & \; x = \alpha y = \left(1 - \frac{t}{\|y\|}\right)y
+        \end{split}
+    \end{equation}
+    \qed
+\end{enumerate}
+
 \end{homeworkProblem}
 
-\begin{homeworkProblem}
-    \begin{enumerate}
-        \item[a)]
-        \includegraphics[width=0.9\textwidth]{figures/grad_lgt}
-        \item[b)]
-        \includegraphics[width=0.9\textwidth]{figures/grad_newton_lgt}
-        
-        Both methods converge, yet the Newton method converges 20 times faster than the Gradient Descent. 
-        \item[c)] \includegraphics[width=0.9\textwidth]{figures/grad_newton_poisson}
-        \item[d)] Newton Method converges with acceleration over time, while the Gradient Descent method converges with a fixed rate in terms of a logarithmic plot. It illustrates the theoretical result that the Newton Method converges quadratically while the Gradient Descent algorithm converges linearly. Also, it means that the starting point was pretty close to the solution, as the fixed step-size Newton method converges. 
-    \end{enumerate}
-\end{homeworkProblem}
+\textbf{The coding assignment is in .ipynb file attached to this homework}.
 
 \end{document}
