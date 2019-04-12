@@ -1,0 +1,298 @@
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+
+\usetikzlibrary{automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\usepackage{graphicx, url}
+\graphicspath{figures/}
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+\chead{\hmwkClass}
+\rhead{\hmwkTitle}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
+}
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Problem \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+%   - Title
+%   - Due date
+%   - Class
+%   - Section/Time
+%   - Instructor
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{Homework\ \#4}
+\newcommand{\hmwkDueDate}{March 23, 2019}
+\newcommand{\hmwkClass}{AMATH 515 (Optimization)}
+\newcommand{\hmwkClassTime}{Section A}
+\newcommand{\hmwkClassInstructor}{Prof. Alexander Aravkin}
+\newcommand{\hmwkAuthorName}{\textbf{Alexey Sholokhov}}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 23:59}\\
+    \vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
+    \vspace{3in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+%
+% Various Helper Commands
+%
+
+% Useful for algorithms
+\newcommand{\alg}[1]{\textsc{\bfseries \footnotesize #1}}
+
+% For derivatives
+\newcommand{\deriv}[1]{\frac{\mathrm{d}}{\mathrm{d}x} (#1)}
+
+% For partial derivatives
+\newcommand{\pderiv}[2]{\frac{\partial}{\partial #1} (#2)}
+
+% Integral dx
+\newcommand{\dx}{\mathrm{d}x}
+
+% Alias for the Solution section header
+\newcommand{\solution}{\textbf{\large Solution}}
+
+% Probability commands: Expectation, Variance, Covariance, Bias
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\Bias}{\mathrm{Bias}}
+
+% Different math operators
+\DeclareMathOperator{\dom}{Dom}
+\DeclareMathOperator{\diag}{Diag}
+\DeclareMathOperator{\prox}{prox}
+\DeclareMathOperator*{\proj}{proj}
+\DeclareMathOperator*{\sign}{sign}
+
+%% \mathbb symbols
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\A}{\mathbb{A}}
+\DeclareMathOperator{\R}{\mathbb{R}}
+\DeclareMathOperator{\X}{\mathbb{X}}
+\DeclareMathOperator{\N}{\mathbb{N}}
+\DeclareMathOperator{\Q}{\mathbb{Q}}
+
+%% \mathcal symbols
+\DeclareMathOperator{\RR}{\mathcal{R}}
+\DeclareMathOperator{\PP}{\mathcal{P}}
+\DeclareMathOperator{\NN}{\mathcal{N}}
+\DeclareMathOperator{\CC}{\mathcal{C}}
+
+
+
+\begin{document}
+
+\maketitle
+
+\pagebreak
+
+    
+\begin{homeworkProblem}
+
+Prove the following identity for $\alpha \in \mathbb{R}$:
+\[
+\|\alpha x + (1-\alpha) y\|^2 + \alpha(1-\alpha) \|x-y\|^2 = \alpha \|x\|^2 + (1-\alpha) \|y\|^2.
+\]
+
+\solution
+
+\[
+\begin{split}
+    & \|\alpha x + (1 - \alpha)y\|^2 + \alpha(1 - \alpha)\|x - y\|^2 = \\
+    = \,& \alpha\|x\|^2 + 2\alpha(1-\alpha)x^Ty + (1-\alpha)^2\|y\|^2 -2\alpha(1-\alpha)x^Ty + \alpha(1-\alpha)\|x\|^2 + \alpha(1-\alpha)\|y\|^2 = \\
+    = \, & \alpha\|x\|^2 + (1-\alpha)\|y\|^2
+\end{split}
+\] \qed
+
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+    An operator $T$ is {\it nonexpansive} if  $\|Tx - Ty\| \leq \|x - y\|$ for all $(x,y)$. 
+For any such nonexpansive operator $T$, define 
+\[
+T_\lambda = (1-\lambda)I + \lambda T. 
+\]
+\begin{enumerate}
+\item Show that $T_\lambda$ and $T$ have the same fixed points. 
+\item Use problem 1 to show 
+\[
+\|T_\lambda z - \overline z\|^2 \leq \|z-\overline z\|^2 - \lambda(1-\lambda) \|z - Tz\|^2.
+\]
+where $\overline z$ is any fixed point of $T$, i.e. $T\overline z = \overline z$.
+
+\end{enumerate}
+
+\solution
+
+\begin{enumerate}
+    \item Let $x^*$ be a fixed point of $T$: $x^* = Tx^*$. Then for the operator $T_\lambda$ we have 
+        \[
+        T_\lambda x^* = (1 - \lambda)Ix^* + \lambda T x^* = (1 - \lambda)Tx^* + \lambda T x^* = Tx^* = x^*
+        \] \qed
+    \item Let $\bar{z}$ be $T\bar{z} =\bar{z}$
+        \[
+            \begin{split}
+            & \|T_\lambda z - \bar{z}\|^2 \stackrel{a}{=} \|T_\lambda z - T_\lambda \bar{z}\|^2 = \|(1-\lambda)z + \lambda Tz - (1-\lambda)\bar{z} - \lambda T\bar{z}\|^2 = \\
+            & \stackrel{1}{=} \lambda \|Tz - T\bar{z}\|^2 + (1-\lambda)\|z-\bar{z}\|^2 - \lambda(1-\lambda)\|Tz - T\bar{z} - z + \bar{z}\|^2 \leq \\
+            & \leq (1-\lambda)\|z - \bar{z}\|^2 + \lambda\|z - \bar{z}\|^2 - \lambda(1 - \lambda)\|Tz - z \|^2 = \\
+            & = \|z-\bar{z}\|^2 - \lambda(1-\lambda)\|z - Tz\|^2 
+            \end{split}
+        \] \qed
+\end{enumerate}
+
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+     An operator $T$ is {\it firmly nonexpansive} when it satisfies 
+\[
+\|Tx - Ty\|^2 + \|(I-T) x - (I-T)y\|^2 \leq \|x-y\|^2. 
+\]
+
+
+\begin{enumerate}
+\item Show $T$ is firmly nonexpansive if and only if 
+\[
+\langle x-y, Tx - Ty \rangle \geq \|Tx - Ty\|^2. 
+\]
+\item Show $T$ is firmly nonexpansive if and only if 
+\[
+\langle Tx - Ty, (I-T)x - (I-T)y \rangle \geq 0. 
+\]
+
+
+\item Suppose that $S = 2T - I$. Let 
+\[
+\mu = \|Tx - Ty\|^2 + \|(I-T)x - (I-T)y\|^2 - \|x-y\|^2
+\]
+and let 
+\[
+\nu = \|Sx - Sy\|^2 - \|x-y\|^2.
+\]
+Show that $2\mu = \nu$ (you may find it helpful to use problem (1)). Conclude that 
+$T$ is firmly nonexpansive exactly when $S$ is nonexpansive. 
+
+\end{enumerate}
+
+\solution
+
+All the transitions below are equivalences (if and only if):
+
+\begin{enumerate}
+    \item 
+        \[  \begin{split}
+            & \|x - y\|^2 - \|x - y + (Tx - Ty)\|^2 = \\
+            & = \|x - y\|^2 - \|x - y\|^2 + 2(x-y)^T(Tx - Ty) - \|Ty - Tx\|^2 \geq \|Tx - Ty\|^2 \iff \\
+            & \iff (x-y)^T(Tx - Ty) \geq \|Tx - Ty\|^2
+            \end{split} 
+        \] \qed
+    \item 
+        \[
+            \begin{split}
+                 & (Tx - Ty)^T((I - T)x - (I - T)y) \geq 0 \iff \\
+                 & \iff (Tx-Ty)^T((x-y) - (Tx - Ty)) \geq 0 \iff \\
+                 & \iff (Tx-Ty)^T((x-y) \geq \|Tx - Ty\|^2 \stackrel{3.1}{\iff} \\
+                 & \stackrel{3.1}{\iff} \|Tx - Ty\|^2 + \|(I-T) x - (I-T)y\|^2 \leq \|x-y\|^2
+            \end{split} 
+        \] \qed
+    \item Let $S := 2T - I$, then we have
+        \[
+            \begin{split}
+                & \nu + \|x - y\|^2 = \\
+                & \|Sx - Sy\|^2 = \|(2I - T)x - (2I - T)y\|^2 = \|Tx - (I-T)x - Ty + (I-T)y\|^2 = \\
+                & = \|Tx - Ty\|^2 + \|(I-T)x - (I-T)y\|^2 - 2(Tx - Ty)^T((I-T)x - (I-T)y = \\
+                & = 3\|Tx - Ty\|^2 + \|(I-T)x - (I-T)y\|^2 - 2(Tx - Ty)^T(x-y) = \\
+                & = 2\|Tx - Ty\|^2 + \|(I-T)x - (I-T)y\|^2 + \|Tx - Ty\|^2 - 2(Tx-Ty)^T(x-y) + \|x-y\|^2 - \|x - y\|^2 = \\
+                & = 2\|Tx - Ty\|^2 + 2\|(I-T)x - (I-T)y\|^2 - \|x-y\|^2 = \\
+                & = 2\mu + \|x-y\|^2 \iff \\ 
+                & \iff \nu = 2\mu
+            \end{split}
+        \]
+        The firm-nonexpansiveness of $T$ is equivalent to $\mu \leq 0$, the nonexpansiveness of $S$ is equivalent to $\nu \leq 0$, which can happen only simultaneously as $\mu = 2\nu$ \qed
+\end{enumerate}
+
+
+\end{homeworkProblem}
+
+\textbf{The coding assignment is in .ipynb file attached to this homework}.
+
+\end{document}
